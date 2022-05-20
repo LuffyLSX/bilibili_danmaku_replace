@@ -2,7 +2,7 @@
 主要用于港澳台番剧，将国内同番剧的弹幕搬运到港澳台的番剧
 
 ## 安装方法
-浏览器安装油猴脚本（Tampermonkey），点击[安装地址](https://www.runoob.com)或者复制代码到油猴面板
+浏览器安装油猴脚本（Tampermonkey），点击[安装地址]([https://www.runoob.com](https://greasyfork.org/scripts/445273-bilibili%E6%B8%AF%E6%BE%B3%E5%8F%B0%E7%95%AA%E5%89%A7%E6%9B%BF%E6%8D%A2%E5%BC%B9%E5%B9%95/code/bilibili%E6%B8%AF%E6%BE%B3%E5%8F%B0%E7%95%AA%E5%89%A7%E6%9B%BF%E6%8D%A2%E5%BC%B9%E5%B9%95.user.js))或者复制代码到油猴面板
 
 ## 如何使用
 ### 脚本安装成功后在播放器下方会多出一个按钮  
