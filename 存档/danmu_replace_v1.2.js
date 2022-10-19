@@ -125,7 +125,7 @@
         }
     }
 
-    var danmuProtobuf = new Array()
+    
     function getDanmukuProtobuf(cid = 714449041, n = 1){
         var url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid +"&segment_index=" + n
         var xhr = new XMLHttpRequest()
@@ -154,6 +154,7 @@
     }
 
     var video_reloadData = {}
+    var danmuProtobuf = new Array()
     function replace(){
         var episodes = document.querySelector('.list-box')
         var ep_on = (document.querySelector('.list-box') == null) ? 1 : /[0-9]+/.exec(episodes.querySelector('.on').innerText)[0]
@@ -170,6 +171,7 @@
         }
         var Target = getBangumiData(EpSsid, ep_on)
         getDanmukuProtobuf(Target.cid)
+        danmuProtobuf = new Array()
     }
     
     function insert_danmu(){
