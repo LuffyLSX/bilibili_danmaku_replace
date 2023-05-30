@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         bilibili港澳台番剧替换弹幕
 // @namespace    https://github.com/LuffyLSX/bilibili_danmaku_replace
-// @version      1.1
+// @version      1.3
 // @description  点击按钮后，输入想要替换的番剧的网址、Epid、SeasonId其中一种即可替换弹幕
 // @author       LuffyLSX
+// @license      GNU
 // @match        https://www.bilibili.com/bangumi/*
 // @match        https://www.bilibili.com/video/*
 // @require      https://unpkg.com/ajax-hook@2.0.3/dist/ajaxhook.min.js
+// @require      http://code.jquery.com/jquery-3.x-git.min.js
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -36,8 +38,10 @@
             line-height: 28px;
             font-size: 14px;
             color: #505050;margin-left: 5px;
+            
         } `
     
+        
     function getBangumiData(Epid_or_Ssid = window.location.href, ep = 0){
         $.ajaxSettings.async = false
         var bangumi_data = {}
@@ -123,7 +127,7 @@
         }
     }
 
-    var danmuProtobuf = new Array()
+    
     function getDanmukuProtobuf(cid = 714449041, n = 1){
         var url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid +"&segment_index=" + n
         var xhr = new XMLHttpRequest()
@@ -152,6 +156,7 @@
     }
 
     var video_reloadData = {}
+    var danmuProtobuf = new Array()
     function replace(){
         var episodes = document.querySelector('.list-box')
         var ep_on = (document.querySelector('.list-box') == null) ? 1 : /[0-9]+/.exec(episodes.querySelector('.on').innerText)[0]
@@ -168,12 +173,21 @@
         }
         var Target = getBangumiData(EpSsid, ep_on)
         getDanmukuProtobuf(Target.cid)
+        danmuProtobuf = new Array()
     }
     
     function insert_danmu(){
         let danmu = document.createElement('div')
         danmu.className = "danmu-replace"
         danmu.innerHTML = `
+       <div class="danmu-svg">
+            <svg viewBox="0 0 28 28">
+                        <use xlink:href="#bpx-svg-sprite-dantype-scroll"></use>
+                    </svg>
+            </div>
+        <span class="danmu-span">替换弹幕</span>
+        `
+        /*
         <div class="danmu-svg">
             <svg viewBox="0 0 28 28">
                         <use xlink:href="#bpx-svg-sprite-dantype-scroll"></use>
@@ -181,7 +195,9 @@
             </div>
         <span class="danmu-span">替换弹幕</span>
         `
-        document.getElementById('toolbar_module').insertBefore(danmu,document.getElementsByClassName('watch-toast-wrp')[0])
+        */
+        
+        document.getElementsByClassName('toolbar_toolbar__NJCNy')[0].appendChild(danmu)
         let styleNode = document.createElement("style");
         styleNode.className = 'css'
         styleNode.appendChild(document.createTextNode(css));
@@ -192,10 +208,10 @@
         danmu.addEventListener("mouseover", function(){document.getElementsByClassName('danmu-span')[0].style.color = '#23ADE5'})
         danmu.addEventListener("mouseout", function(){document.getElementsByClassName('danmu-span')[0].style.color = ''})
     
-        danmu.addEventListener("mouseover", function(){document.getElementsByClassName('danmu-svg')[0].style.fill = '#23ADE5'})
+        danmu.addEventListener("mouseover", function(){document.getElementsByClassName('danmu-svg')[0].style.fill = '#00a1d6'})
         danmu.addEventListener("mouseout", function(){document.getElementsByClassName('danmu-svg')[0].style.fill = ''})
     }
-
+    /*
     function clone_danmu(){
         let sourceNode = document.getElementsByClassName("toolbar-left")[0]
         let danmu = sourceNode.getElementsByClassName('coin')[0].cloneNode(true)
@@ -210,12 +226,36 @@
     
         danmu.addEventListener('click',function(){replace()})
     }
+    */
+   
+    function clone_danmu(){
+        let sourceNode = document.getElementsByClassName("toolbar_coin_info__5hnd9 toolbar_item_info__xpKhw")[0]
+        let danmu = sourceNode.cloneNode(true)
+        let svg = danmu.children[0]
+        svg.innerHTML = `
+                        <svg viewBox="0 0 28 28">
+                            <use xlink:href="#bpx-svg-sprite-dantype-scroll"></use>
+                        </svg>
+                        `
+        svg.style.fill='#757575'
+        danmu.addEventListener("mouseover", function(){svg.style.fill = '#00a1d6'})
+        danmu.addEventListener("mouseout", function(){svg.style.fill = '#757575'})
+        let text = danmu.children[1]
+        // danmu.title = ''
+        // danmu.className = 'video_danmu'
+        // let path = 'M23 3H5a4 4 0 00-4 4v14a4 4 0 004 4h18a4 4 0 004-4V7a4 4 0 00-4-4zM11 9h6a1 1 0 010 2h-6a1 1 0 010-2zm-3 2H6V9h2v2zm4 4h-2v-2h2v2zm9 0h-6a1 1 0 010-2h6a1 1 0 010 2z'
+        // svg.childNodes[0].setAttribute('d', path)
+        text.innerText = '替换弹幕'
+        document.getElementsByClassName('toolbar_toolbar__NJCNy')[0].appendChild(danmu)
+    
+        danmu.addEventListener('click',function(){replace()})
+    }
 
     var id = setInterval(function(){
         var bangumi_toolbar = document.querySelector('.main-container')
         var video_toolbar = document.querySelector('.video-toolbar-v1')
         if(bangumi_toolbar){
-            insert_danmu()
+            clone_danmu()
             clearInterval(id)
         }
         if(video_toolbar){
